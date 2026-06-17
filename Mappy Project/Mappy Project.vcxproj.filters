@@ -60,7 +60,6 @@
     <Font Include="Debug\college.ttf">
       <Filter>Source Files</Filter>
     </Font>
-    <Font Include="..\Debug\Weghorst-Italic.otf" />
     <Font Include="..\Debug\Coolvetica Hv Comp.otf">
       <Filter>Source Files</Filter>
     </Font>
