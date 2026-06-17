@@ -5,7 +5,8 @@
 
 ghost::ghost()
 {
-	image = al_load_bitmap("ghost.png");
+	image = al_load_bitmap("boar.png");
+	
 	live = false;
 	speed = 5;
 	boundx = al_get_bitmap_width(image);
