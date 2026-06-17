@@ -44,6 +44,7 @@ private:
 	int animationDirection;
 	int charWidth;
 	int charHeight;
+	int speed;
 	//bool isJumping;
 	bool goingLeft;
 	//int jumpFrameDelay;

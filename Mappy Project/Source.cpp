@@ -25,6 +25,9 @@ int main(void)
 	bool hasWon = false;
 	const int WIDTH = 900;
 	const int HEIGHT = 480;
+	const int NUM_ghostS = 40;
+	int ghosts_shown;
+	const int FPS = 60;
 	bool keys[] = { false, false, false, false, false };
 	enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
 	//variables
@@ -39,11 +42,11 @@ int main(void)
 	bool timesUp = false;
 	int level = 1;
 	bool levelOver = false;
-	char name[20];
+	char name[50];
 	//bool gameOver = 0;
 	double startTime = 0.0;
-	int MAX_SECS;
-	int timeLeft = 60;
+	int MAX_SECS = 16;
+	int timeLeft = 30;
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
@@ -56,8 +59,6 @@ int main(void)
 	//program init
 	if (!al_init())										//initialize Allegro
 		return -1;
-
-
 
 	if (!al_install_audio()) {
 		return -1;
@@ -79,15 +80,20 @@ int main(void)
 	al_init_font_addon();
 	al_init_ttf_addon();
 
+	ghost ghosts[NUM_ghostS];
+
 	player.InitSprites(WIDTH, HEIGHT);
 
 	int xOff = 0;
 	int yOff = 0;
-	if (MapLoad("Level1.FMP", 1))
+	if (MapLoad("FinalProjectLevel1.FMP", 1))
 		return -5;
 
 	event_queue = al_create_event_queue();
 	timer = al_create_timer(1.0 / 60);
+
+	//srand(time(NULL));
+
 	font = al_load_ttf_font("college.ttf", 54, 0);
 	time_font = al_load_ttf_font("Coolvetica Hv Comp.otf", 36, 0);
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -118,7 +124,7 @@ int main(void)
 				break;
 			}
 			MapFreeMem();
-			snprintf(name, sizeof(name), "Level%i.FMP", level);
+			snprintf(name, sizeof(name), "FinalProjectLevel%i.FMP", level);
 
 			player.InitSprites(WIDTH, HEIGHT);
 
@@ -139,28 +145,20 @@ int main(void)
 
 		}
 		double secondsGoneBy = al_get_time() - startTime;
-		timeLeft = 60 - (int)secondsGoneBy;
-
-
-		if (level == 1) {
-			MAX_SECS = 60;
-		}
-		else if (level == 2) {
-			MAX_SECS = 120;
-		}
-		else if (level == 3) {
-			MAX_SECS = 180;
-		}
-
+		timeLeft = MAX_SECS - (int)secondsGoneBy;
 
 		current_seconds = al_get_time();
 		not_double_secs = (int)current_seconds;
 
-
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
+
+
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
+			//draw status bar
+			al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0, "Health:");
+			al_draw_filled_rectangle(20, 30, 130, 150, al_map_rgb(0, 255, 0));
 			render = true;
 			MapUpdateAnims();
 			if (keys[UP])
@@ -175,7 +173,15 @@ int main(void)
 				;
 			else
 				player.UpdateSprites(WIDTH, HEIGHT, 5);
-
+			for (int i = 0; i < NUM_ghostS; i++) {
+				ghosts[i].Startghost(WIDTH, HEIGHT);
+			}
+			for (int i = 0; i < NUM_ghostS; i++) {
+				ghosts[i].Updateghost();
+			}
+			for (int i = 0; i < NUM_ghostS; i++) {
+				ghosts[i].Collideghost(player);
+			}
 			render = true;
 
 		}
@@ -257,49 +263,24 @@ int main(void)
 			MapDrawFG(xOff, yOff, 0, 0, WIDTH, HEIGHT, 0);
 			//jump = player.jumping(jump, JUMPIT);
 			player.DrawSprites(xOff, yOff);
-			if (MAX_SECS == 60) {
-				al_draw_textf(time_font, al_map_rgb(255, 0, 127), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
-
-				if (player.CollisionEndBlock()) {
-					hasWon = true;
-					levelOver = true;
-					al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", 60 - timeLeft);
-
-				}
-				else if (timeLeft <= 0) {
-					timesUp = true;
-					al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 2, 150, 0, "Time's Up!");
-				}
+			for (int i = 0; i < NUM_ghostS; i++) {
+				ghosts[i].Drawghost();
 			}
-			else if (MAX_SECS == 120) {
-				al_draw_textf(time_font, al_map_rgb(255, 255, 255), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
+			
+			al_draw_textf(time_font, al_map_rgb(0, 0, 255), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
 
-				if (player.CollisionEndBlock()) {
-					hasWon = true;
-					levelOver = true;
-					al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", 60 - timeLeft);
+			if (player.CollisionEndBlock()) {
+				hasWon = true;
+				levelOver = true;
+				al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", MAX_SECS - timeLeft);
 
-				}
-				else if (timeLeft <= 0) {
-					timesUp = true;
-					al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 2, 150, 0, "Time's Up!");
-				}
 			}
-			else {
-				al_draw_textf(time_font, al_map_rgb(0, 0, 255), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
-
-				if (player.CollisionEndBlock()) {
-					hasWon = true;
-					levelOver = true;
-					al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", 60 - timeLeft);
-
-				}
-				else if (timeLeft <= 0) {
-					timeLeft = 0;
-					timesUp = true;
-					al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 2, 150, 0, "Time's Up!");
-				}
+			else if (timeLeft <= 0) {
+				timeLeft = 0;
+				timesUp = true;
+				al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 2, 150, 0, "Time's Up!");
 			}
+			//}
 
 
 

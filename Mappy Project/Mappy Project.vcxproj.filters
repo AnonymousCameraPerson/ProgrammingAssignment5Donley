@@ -55,6 +55,9 @@
     <Image Include="..\..\..\Downloads\man_walking.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Debug\boar.png">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Debug\college.ttf">

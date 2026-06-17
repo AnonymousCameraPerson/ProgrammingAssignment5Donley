@@ -31,6 +31,7 @@ void Sprite::InitSprites(int width, int height)
 	frameHeight = 499;
 	animationColumns = 4;
 	animationDirection = 0;
+	speed = 10;
 
 	image = al_load_bitmap("man_walking.png");
 	al_convert_mask_to_alpha(image, al_map_rgb(254, 254, 254));
@@ -45,7 +46,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		//curFrame = 12;
 		animationDirection = 3;
 		goingLeft = false;
-		x += 2;
+		x += speed;
 		if (++frameCount > frameDelay)
 		{
 			frameCount = 0;
@@ -57,7 +58,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		//curFrame = 8;
 		animationDirection = 2;
 		goingLeft = true;
-		x -= 2;
+		x -= speed;
 		if (++frameCount >= frameDelay)
 		{
 			frameCount = 0;
@@ -69,7 +70,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	else if (dir == 1) {//up key
 		//curFrame = 4;
 		animationDirection = 1;
-		y -= 2;
+		y -= speed;
 		if (++frameCount >= frameDelay)
 		{
 			frameCount = 0;
@@ -81,7 +82,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	else if (dir == 0) {//down key
 		//curFrame = 0;
 		animationDirection = 0;
-		y += 2;
+		y += speed;
 		if (++frameCount >= frameDelay)
 		{
 			frameCount = 0;
