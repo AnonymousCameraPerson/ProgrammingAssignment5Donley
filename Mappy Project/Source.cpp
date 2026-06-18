@@ -113,10 +113,21 @@ int main(void)
 
 	//draw foreground tiles
 	MapDrawFG(xOff, yOff, 0, 0, WIDTH - 1, HEIGHT - 1, 0);
+
 	player.DrawSprites(0, 0);
+	
 	al_flip_display();
+	
 	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_draw_textf(font, al_map_rgb(0, 255, 255), WIDTH /3, 100, 0, "Welcome!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 200, 0, "The goal is to finish all 3 levels before time runs out");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 260, 0, "or you die. Use the arrow keys to move around");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 300, 0, "Don't touch the blocks! (Some wont hurt you tho)");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, HEIGHT - 100, 0, "Press Enter To continue");
+	al_flip_display();
+	cin.get();
 	startTime = al_get_time();
+	
 	while (!done)
 	{
 		if (numHits == 5) {
