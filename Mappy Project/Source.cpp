@@ -23,7 +23,7 @@ using namespace std;
 int collided(int x, int y);  //Tile Collision
 int collideWithCeiling(int x, int y); //Collision with ceiling
 bool endValue(int x, int y); //End Block with the User Value = 8
-void drawStatus(int xOff, int yOff, Sprite& player, string& health);
+void drawStatus(int xOff, int yOff, Sprite& player, string& health, bool& isDead, bool& wasHit);
 int main(void)
 {
 	bool hasWon = false;
@@ -52,7 +52,9 @@ int main(void)
 	double startTime = 0.0;
 	int MAX_SECS = 30;
 	int timeLeft = 30;
+	bool isDead = false;
 	int numHits = 0;
+	bool wasHit = false;
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
@@ -278,7 +280,7 @@ int main(void)
 			MapDrawFG(xOff, yOff, 0, 0, WIDTH, HEIGHT, 0);
 			//jump = player.jumping(jump, JUMPIT);
 			player.DrawSprites(xOff, yOff);
-			drawStatus(xOff, yOff, player, health);
+			drawStatus(xOff, yOff, player, health, isDead, wasHit);
 			for (int i = 0; i < NUM_ghostS; i++) {
 				ghosts[i].Drawghost();
 			}
@@ -301,6 +303,10 @@ int main(void)
 
 			al_flip_display();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
+			if (isDead) {
+				al_rest(3.0);
+				break;
+			}
 			if (hasWon) {
 				bool lastLevel = false;
 				al_rest(3.0);
@@ -323,10 +329,16 @@ int main(void)
 			}
 		}
 	}
-	if (hasWon) {
+	if (isDead) {
+		al_clear_to_color(al_map_rgb(0, 0, 0));
+		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU DIED!");
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 200, "HEALTH: %s", health.c_str());
+		al_flip_display();
+	}
+	else if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU WON!");
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 20, 00, "HEALTH: %s", health.c_str());
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 200, "HEALTH: %s", health.c_str());
 		al_flip_display();
 	}
 	al_rest(7.0);
@@ -377,32 +389,39 @@ bool endValue(int x, int y)
 	}
 }
 
-void drawStatus(int xOff, int yOff, Sprite& player, string& health) {
+void drawStatus(int xOff, int yOff, Sprite& player, string& health, bool& isDead, bool& wasHit) {
 	int x = 25;
 	int y= 7;
 	int height = y+20;
 	if (player.getHits() == 0) {
 		al_draw_filled_rectangle(x, y, x + 150, height, al_map_rgb(0, 255, 0));
 		health = "Perfect";
+		wasHit = true;
 	}
-	else if (player.getHits() == 1) {
+	else if (player.getHits() <= 4) {
 		al_draw_filled_rectangle(x, y, x + 120, height, al_map_rgb(0, 255, 0));
 		health = "Pretty Good";
+		wasHit = true;
 	}
-	else if (player.getHits() == 2) {
+	else if (player.getHits() <= 8) {
 		al_draw_filled_rectangle(x, y, x + 100, height, al_map_rgb(0, 255, 0));
 		health = "Mid";
+		wasHit = true;
 	}
-	else if (player.getHits() == 3) {
+	else if (player.getHits() <= 12) {
 		al_draw_filled_rectangle(x, y, x + 70, height, al_map_rgb(0, 255, 0));
 		health = "Careless";
+		wasHit = true;
 	}
-	else if (player.getHits() == 4) {
+	else if (player.getHits() <= 16) {
 		al_draw_filled_rectangle(x, y, x + 45, height, al_map_rgb(0, 255, 0));
 		health = "Dying";
+		wasHit = true;
 	}
-	else if (player.getHits() >= 5) {
+	else if (player.getHits() > 16) {
 		al_draw_filled_rectangle(x, y, 25, height, al_map_rgb(0, 255, 0));
 		health = "Dead";
+		wasHit = true;
+		isDead = true;
 	}
 }

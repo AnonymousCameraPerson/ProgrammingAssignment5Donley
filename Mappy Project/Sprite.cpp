@@ -175,10 +175,40 @@ void Sprite::DrawSprites(int xoffset, int yoffset)
 	float minimizeX = (float)newWidth / charWidth;
 	float minimizeY = (float)newHeight / charHeight;
 
-	if (animationDirection == 5) {
+	if (animationDirection == 5 && getHits() == 0) {
 		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
 	}
-	else {
+	else if (animationDirection == 5 && getHits() <= 4) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection == 5 && getHits() <= 8) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection == 5 && getHits() <= 12) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection == 5 && getHits() <= 16) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection == 5 && getHits() > 16) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() == 0) {
 		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() <= 4) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() <= 8) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() <= 12) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() <= 16) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+	}
+	else if (animationDirection < 5 && getHits() > 16) {
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
 	}
 }
