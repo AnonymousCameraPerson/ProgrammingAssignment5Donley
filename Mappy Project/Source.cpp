@@ -14,12 +14,15 @@
 #include <string.h>
 #include "mappy_A5.h"
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 //Lucia Donley
 using namespace std;
 
 int collided(int x, int y);  //Tile Collision
 int collideWithCeiling(int x, int y); //Collision with ceiling
 bool endValue(int x, int y); //End Block with the User Value = 8
+void drawStatus();
 int main(void)
 {
 	bool hasWon = false;
@@ -45,8 +48,9 @@ int main(void)
 	char name[50];
 	//bool gameOver = 0;
 	double startTime = 0.0;
-	int MAX_SECS = 16;
+	int MAX_SECS = 20;
 	int timeLeft = 30;
+	int numHits = 0;
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
@@ -111,6 +115,9 @@ int main(void)
 	startTime = al_get_time();
 	while (!done)
 	{
+		if (numHits == 5) {
+			break;
+		}
 
 		//Pollack pseudo code:
 
@@ -156,6 +163,9 @@ int main(void)
 
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
+			if (numHits == 5) {
+				break;
+			}
 			//draw status bar
 			al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0, "Health:");
 			al_draw_filled_rectangle(20, 30, 130, 150, al_map_rgb(0, 255, 0));
@@ -173,15 +183,15 @@ int main(void)
 				;
 			else
 				player.UpdateSprites(WIDTH, HEIGHT, 5);
-			for (int i = 0; i < NUM_ghostS; i++) {
-				ghosts[i].Startghost(WIDTH, HEIGHT);
-			}
-			for (int i = 0; i < NUM_ghostS; i++) {
-				ghosts[i].Updateghost();
-			}
-			for (int i = 0; i < NUM_ghostS; i++) {
-				ghosts[i].Collideghost(player);
-			}
+			//for (int i = 0; i < NUM_ghostS; i++) {
+			//	ghosts[i].Startghost(WIDTH, HEIGHT);
+			//}
+			//for (int i = 0; i < NUM_ghostS; i++) {
+			//	ghosts[i].Updateghost();
+			//}
+			//for (int i = 0; i < NUM_ghostS; i++) {
+			//	ghosts[i].Collideghost(player);
+			//}
 			render = true;
 
 		}
@@ -240,6 +250,9 @@ int main(void)
 		}
 		if (render && al_is_event_queue_empty(event_queue))
 		{
+			if (numHits == 5) {
+				break;
+			}
 			render = false;
 
 			//update the map scroll position
@@ -263,6 +276,7 @@ int main(void)
 			MapDrawFG(xOff, yOff, 0, 0, WIDTH, HEIGHT, 0);
 			//jump = player.jumping(jump, JUMPIT);
 			player.DrawSprites(xOff, yOff);
+			drawStatus(xOff, yOff, numHits);
 			for (int i = 0; i < NUM_ghostS; i++) {
 				ghosts[i].Drawghost();
 			}
@@ -273,7 +287,6 @@ int main(void)
 				hasWon = true;
 				levelOver = true;
 				al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", MAX_SECS - timeLeft);
-
 			}
 			else if (timeLeft <= 0) {
 				timeLeft = 0;
@@ -287,13 +300,31 @@ int main(void)
 			al_flip_display();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
 			if (hasWon) {
+				bool lastLevel = false;
 				al_rest(3.0);
-				hasWon = false;
+				for (char e : name) {
+					if (e == '3') {
+						lastLevel = true;
+						break;
+					}
+				}
+
+				if (lastLevel) {
+					hasWon = true;
+				}
+				else 
+					hasWon = false;
+				
 			}
 			if (timesUp) {
 				done = true;
 			}
 		}
+	}
+	if (hasWon) {
+		al_clear_to_color(al_map_rgb(0, 0, 0));
+		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU WON!");
+		al_flip_display();
 	}
 	al_rest(7.0);
 	MapFreeMem();
@@ -340,5 +371,23 @@ bool endValue(int x, int y)
 	}
 	else {
 		return false;
+	}
+}
+
+void drawStatus(int x, int y, int numHits) {
+	if (numHits == 1) {
+		al_draw_filled_rectangle(x, y, x + 20, y + 5, al_map_rgb(0, 255, 0));
+	}
+	else if (numHits == 2) {
+		al_draw_filled_rectangle(x, y, x + 15, y + 5, al_map_rgb(0, 255, 0));
+	}
+	else if (numHits == 3) {
+		al_draw_filled_rectangle(x, y, x + 10, y + 5, al_map_rgb(0, 255, 0));
+	}
+	else if (numHits == 4) {
+		al_draw_filled_rectangle(x, y, x + 5, y + 5, al_map_rgb(0, 255, 0));
+	}
+	else if (numHits == 5) {
+		al_draw_filled_rectangle(x, y, x, y + 5, al_map_rgb(0, 255, 0));
 	}
 }
