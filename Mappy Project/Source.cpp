@@ -16,16 +16,18 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <string>
 //Lucia Donley
 using namespace std;
 
 int collided(int x, int y);  //Tile Collision
 int collideWithCeiling(int x, int y); //Collision with ceiling
 bool endValue(int x, int y); //End Block with the User Value = 8
-void drawStatus();
+void drawStatus(int xOff, int yOff, Sprite& player, string& health);
 int main(void)
 {
 	bool hasWon = false;
+	string health = "Perfect";
 	const int WIDTH = 900;
 	const int HEIGHT = 480;
 	const int NUM_ghostS = 40;
@@ -48,7 +50,7 @@ int main(void)
 	char name[50];
 	//bool gameOver = 0;
 	double startTime = 0.0;
-	int MAX_SECS = 20;
+	int MAX_SECS = 30;
 	int timeLeft = 30;
 	int numHits = 0;
 
@@ -167,8 +169,8 @@ int main(void)
 				break;
 			}
 			//draw status bar
-			al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0, "Health:");
-			al_draw_filled_rectangle(20, 30, 130, 150, al_map_rgb(0, 255, 0));
+			//al_draw_text(font, al_map_rgb(255, 255, 255), 10, 10, 0, "Health:");
+			//al_draw_filled_rectangle(20, 30, 130, 150, al_map_rgb(0, 255, 0));
 			render = true;
 			MapUpdateAnims();
 			if (keys[UP])
@@ -276,7 +278,7 @@ int main(void)
 			MapDrawFG(xOff, yOff, 0, 0, WIDTH, HEIGHT, 0);
 			//jump = player.jumping(jump, JUMPIT);
 			player.DrawSprites(xOff, yOff);
-			drawStatus(xOff, yOff, numHits);
+			drawStatus(xOff, yOff, player, health);
 			for (int i = 0; i < NUM_ghostS; i++) {
 				ghosts[i].Drawghost();
 			}
@@ -324,6 +326,7 @@ int main(void)
 	if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU WON!");
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 20, 00, "HEALTH: %s", health.c_str());
 		al_flip_display();
 	}
 	al_rest(7.0);
@@ -374,20 +377,32 @@ bool endValue(int x, int y)
 	}
 }
 
-void drawStatus(int x, int y, int numHits) {
-	if (numHits == 1) {
-		al_draw_filled_rectangle(x, y, x + 20, y + 5, al_map_rgb(0, 255, 0));
+void drawStatus(int xOff, int yOff, Sprite& player, string& health) {
+	int x = 25;
+	int y= 7;
+	int height = y+20;
+	if (player.getHits() == 0) {
+		al_draw_filled_rectangle(x, y, x + 150, height, al_map_rgb(0, 255, 0));
+		health = "Perfect";
 	}
-	else if (numHits == 2) {
-		al_draw_filled_rectangle(x, y, x + 15, y + 5, al_map_rgb(0, 255, 0));
+	else if (player.getHits() == 1) {
+		al_draw_filled_rectangle(x, y, x + 120, height, al_map_rgb(0, 255, 0));
+		health = "Pretty Good";
 	}
-	else if (numHits == 3) {
-		al_draw_filled_rectangle(x, y, x + 10, y + 5, al_map_rgb(0, 255, 0));
+	else if (player.getHits() == 2) {
+		al_draw_filled_rectangle(x, y, x + 100, height, al_map_rgb(0, 255, 0));
+		health = "Mid";
 	}
-	else if (numHits == 4) {
-		al_draw_filled_rectangle(x, y, x + 5, y + 5, al_map_rgb(0, 255, 0));
+	else if (player.getHits() == 3) {
+		al_draw_filled_rectangle(x, y, x + 70, height, al_map_rgb(0, 255, 0));
+		health = "Careless";
 	}
-	else if (numHits == 5) {
-		al_draw_filled_rectangle(x, y, x, y + 5, al_map_rgb(0, 255, 0));
+	else if (player.getHits() == 4) {
+		al_draw_filled_rectangle(x, y, x + 45, height, al_map_rgb(0, 255, 0));
+		health = "Dying";
+	}
+	else if (player.getHits() >= 5) {
+		al_draw_filled_rectangle(x, y, 25, height, al_map_rgb(0, 255, 0));
+		health = "Dead";
 	}
 }

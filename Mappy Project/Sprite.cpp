@@ -32,6 +32,7 @@ void Sprite::InitSprites(int width, int height)
 	animationColumns = 4;
 	animationDirection = 0;
 	speed = 10;
+	hits = 0;
 
 	image = al_load_bitmap("man_walking.png");
 	al_convert_mask_to_alpha(image, al_map_rgb(254, 254, 254));
@@ -106,6 +107,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		if (collided(x, y + charWidth / 2)) { //collision detection to the left
 			x = oldx;
 			y = oldy;
+			increaseHits();
 		}
 	}
 	else if (animationDirection == 3)
@@ -113,6 +115,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		if (collided(x + charWidth, y + 10) || collided(x + charWidth, y + charHeight - 10) || collided(x + charWidth, y + charHeight / 2)) { //collision detection to the right
 			x = oldx;
 			y = oldy;
+			increaseHits();
 		}
 	}
 
@@ -121,6 +124,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		if (collided(x, y) || collided(x + charWidth, y)) { //collision detection up
 			x = oldx;
 			y = oldy;
+			increaseHits();
 		}
 
 	}
@@ -128,6 +132,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		if (collided(x, y + charHeight) || collided(x + charWidth, y + charHeight)) {
 			x = oldx;
 			y = oldy;
+			increaseHits();
 		}
 	}
 	//collision detection down?
@@ -136,6 +141,10 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 
 void Sprite::increaseHits() {
 	hits++;
+}
+
+int Sprite::getHits() {
+	return hits;
 }
 
 bool Sprite::CollisionEndBlock()

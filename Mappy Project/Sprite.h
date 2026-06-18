@@ -18,6 +18,7 @@ public:
 	void DrawSprites(int xoffset, int yoffset);
 	bool CollideSprite();
 	void increaseHits();
+	int getHits();
 	float getX() { return x; }
 	float getY() { return y; }
 	int getBoundX();
