@@ -21,6 +21,10 @@ void Sprite::InitSprites(int width, int height)
 	//need to check if dir == something for jumping
 	//maxFrame = 12
 	//new if statement in draw function for jumping
+	curAngle = 0;
+	destAngle = 0;
+	currentlyTurning = false;
+	turned = 0;
 	maxFrame = 16;
 	curFrame = 0;
 	//jumpFrame = 8;
@@ -44,9 +48,11 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	int oldy = y;
 
 	if (dir == 3) { //right key
-		//curFrame = 12;
+		//curFrame = 12;Z
 		animationDirection = 3;
 		goingLeft = false;
+		//curAngle = 0;
+		//destAngle = 0;
 		x += speed;
 		if (++frameCount > frameDelay)
 		{
@@ -59,6 +65,8 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		//curFrame = 8;
 		animationDirection = 2;
 		goingLeft = true;
+		//curAngle = 0;
+		//destAngle = 0;
 		x -= speed;
 		if (++frameCount >= frameDelay)
 		{
@@ -70,6 +78,8 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	}
 	else if (dir == 1) {//up key
 		//curFrame = 4;
+		//curAngle = -ALLEGRO_PI / 2;
+		//destAngle = -ALLEGRO_PI / 2;
 		animationDirection = 1;
 		y -= speed;
 		if (++frameCount >= frameDelay)
@@ -82,6 +92,8 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 
 	else if (dir == 0) {//down key
 		//curFrame = 0;
+		//curAngle = ALLEGRO_PI / 2;
+		//destAngle = ALLEGRO_PI / 2;
 		animationDirection = 0;
 		y += speed;
 		if (++frameCount >= frameDelay)
@@ -95,6 +107,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	else { //represent that they hit the space bar and that mean direction = 0
 		goingLeft = false;
 		animationDirection = dir;
+
 		//isJumping = false;
 	}
 
@@ -108,15 +121,25 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 			x = oldx;
 			y = oldy;
 			increaseHits();
+			currentlyTurning = true;
+			destAngle += ALLEGRO_PI;
+			//destAngle += ALLEGRO_PI;
 		}
+		//curAngle = 0;
+		//destAngle = 0;
 	}
 	else if (animationDirection == 3)
 	{
 		if (collided(x + charWidth, y + 10) || collided(x + charWidth, y + charHeight - 10) || collided(x + charWidth, y + charHeight / 2)) { //collision detection to the right
 			x = oldx;
 			y = oldy;
+			currentlyTurning = true;
 			increaseHits();
+			destAngle += ALLEGRO_PI;
 		}
+		//curAngle = ALLEGRO_PI;
+		//destAngle = ALLEGRO_PI;
+		
 	}
 
 	if (animationDirection == 1)
@@ -124,15 +147,35 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 		if (collided(x, y) || collided(x + charWidth, y)) { //collision detection up
 			x = oldx;
 			y = oldy;
+			//destAngle += ALLEGRO_PI;
+			//currentlyTurning = true;
 			increaseHits();
+			
 		}
+		//curAngle = ALLEGRO_PI / 2;
+		//destAngle = ALLEGRO_PI / 2;
 
 	}
 	if (animationDirection == 0) {
 		if (collided(x, y + charHeight) || collided(x + charWidth, y + charHeight)) {
 			x = oldx;
 			y = oldy;
+			//destAngle += ALLEGRO_PI;
+			//currentlyTurning = true;
+
 			increaseHits();
+		}
+		//curAngle = -ALLEGRO_PI / 2;
+		//destAngle = -ALLEGRO_PI / 2;
+	}
+	if (currentlyTurning) {
+		if (curAngle <= destAngle) {
+			curAngle += 0.05f;
+
+			if (curAngle >= destAngle) {
+				curAngle = destAngle;
+				currentlyTurning = false;
+			}
 		}
 	}
 	//collision detection down?
@@ -175,40 +218,41 @@ void Sprite::DrawSprites(int xoffset, int yoffset)
 	float minimizeX = (float)newWidth / charWidth;
 	float minimizeY = (float)newHeight / charHeight;
 
+
 	if (animationDirection == 5 && getHits() == 0) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection == 5 && getHits() <= 4) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection == 5 && getHits() <= 8) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection == 5 && getHits() <= 12) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection == 5 && getHits() <= 16) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection == 5 && getHits() > 16) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() == 0) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 255, 255), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() <= 4) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 191, 191), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() <= 8) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(231, 133, 135), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() <= 12) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(255, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() <= 16) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(200, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 	else if (animationDirection < 5 && getHits() > 16) {
-		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), 0, 0);
+		al_draw_tinted_scaled_rotated_bitmap_region(image, fx, fy, frameWidth, frameHeight, al_map_rgb(150, 0, 0), 0, 0, x - xoffset, y - yoffset, (48.0f / 333.0f), (72.0f / 499.0f), curAngle, 0);
 	}
 }

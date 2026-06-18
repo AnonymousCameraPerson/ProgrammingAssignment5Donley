@@ -50,7 +50,7 @@ int main(void)
 	char name[50];
 	//bool gameOver = 0;
 	double startTime = 0.0;
-	int MAX_SECS = 30;
+	int MAX_SECS = 45;
 	int timeLeft = 30;
 	bool isDead = false;
 	int numHits = 0;

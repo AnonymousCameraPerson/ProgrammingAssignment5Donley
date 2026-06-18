@@ -32,6 +32,10 @@ private:
 	float x;
 	float y;
 
+	float curAngle;
+	float destAngle;
+	bool currentlyTurning;
+	float turned;
 	int hits;
 	int maxFrame;
 	int curFrame;
