@@ -57,5 +57,6 @@ private:
 	//int jumpFrameDelay;
 	ALLEGRO_BITMAP* image;
 	ALLEGRO_SAMPLE* sample;
+
 };
 #endif

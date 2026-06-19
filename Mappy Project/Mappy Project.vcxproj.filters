@@ -74,5 +74,11 @@
     <Media Include="Debug\389552__echocinematics__spy-music.wav">
       <Filter>Source Files</Filter>
     </Media>
+    <Media Include="Debug\small_bell.wav">
+      <Filter>Source Files</Filter>
+    </Media>
+    <Media Include="Debug\61322__mansardian__news-end-signature.wav">
+      <Filter>Source Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

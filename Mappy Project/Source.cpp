@@ -22,6 +22,7 @@
 //Lucia Donley
 using namespace std;
 
+
 int collided(int x, int y);  //Tile Collision
 int collideWithCeiling(int x, int y); //Collision with ceiling
 bool endValue(int x, int y); //End Block with the User Value = 8
@@ -118,7 +119,7 @@ int main(void)
 	//srand(time(NULL));
 
 	font = al_load_ttf_font("college.ttf", 54, 0);
-	time_font = al_load_ttf_font("Coolvetica Hv Comp.otf", 36, 0);
+	time_font = al_load_ttf_font("Coolvetica Hv Comp.otf", 40, 0);
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
@@ -128,9 +129,9 @@ int main(void)
 	al_flip_display();
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_textf(font, al_map_rgb(0, 255, 255), WIDTH / 3, 100, 0, "Welcome!");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 4, 200, 0, "The goal is to get to the end of all 3 levels before time runs out");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 5, 250, 0, "Use the arrow keys to move around. Don't touch the blocks!");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 3, 300, 0, "If you do, you will go crazy!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 5, 200, 0, "The goal is to get to the end of all 3 levels before time runs out");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 5, 260, 0, "Use the arrow keys to move around. Don't touch the blocks!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 3, 310, 0, "If you do, you will go crazy!");
 	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 3, HEIGHT - 100, 0, "Continue in 10 seconds...");
 	al_flip_display();
 	//cin.get();
