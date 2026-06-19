@@ -18,6 +18,7 @@ Sprite::~Sprite()
 	al_destroy_bitmap(image);
 	al_destroy_sample(sample);
 }
+
 void Sprite::InitSprites(int width, int height)
 {
 	x = 120;
@@ -207,8 +208,10 @@ int Sprite::getHits() {
 bool Sprite::CollisionEndBlock()
 {
 
-	if (endValue(x + charWidth / 2, y + charHeight + 5))
+	if (endValue(x + charWidth / 2, y + charHeight + 5)) {
+		sample = NULL;
 		return true;
+	}
 	else
 		return false;
 }

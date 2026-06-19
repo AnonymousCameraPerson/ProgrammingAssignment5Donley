@@ -80,7 +80,7 @@ int main(void)
 		return -1;
 	}
 
-	if (!al_reserve_samples(4)) {
+	if (!al_reserve_samples(64)) {
 		return -1;
 	}
 
@@ -318,7 +318,7 @@ int main(void)
 				ghosts[i].Drawghost();
 			}
 			
-			al_draw_textf(time_font, al_map_rgb(0, 255, 50), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
+			al_draw_textf(time_font, al_map_rgb(0, 255, 50), WIDTH - 200, HEIGHT - 40, 0, "Time Left: %d", timeLeft);
 
 			if (player.CollisionEndBlock()) {
 				hasWon = true;
