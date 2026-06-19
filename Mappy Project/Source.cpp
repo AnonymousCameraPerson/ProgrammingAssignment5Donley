@@ -101,7 +101,7 @@ int main(void)
 	int yOff = 0;
 	if (MapLoad("FinalProjectLevel1.FMP", 1))
 		return -5;
-
+	snprintf(name, sizeof(name), "FinalProjectLevel1.FMP");
 	event_queue = al_create_event_queue();
 	timer = al_create_timer(1.0 / 60);
 
@@ -366,11 +366,11 @@ int main(void)
 	}
 	else if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU WON!");
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 200, "HEALTH: %s", health.c_str());
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 250, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 300, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 350, "FINISHED LEVEL 2 IN %i seconds, finishedTimes[2]");
+		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 25, 0, "YOU WON!");
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 4, 125, 0, "HEALTH: %s", health.c_str());
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 225, 0, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 325, 0, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 425, 0, "FINISHED LEVEL 3 IN %i seconds", finishedTimes[2]);
 		al_flip_display();
 	}
 	al_rest(7.0);
