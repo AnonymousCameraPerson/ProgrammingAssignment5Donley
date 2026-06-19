@@ -16,6 +16,8 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <chrono>
+#include <thread>
 #include <string>
 //Lucia Donley
 using namespace std;
@@ -55,6 +57,7 @@ int main(void)
 	bool isDead = false;
 	int numHits = 0;
 	bool wasHit = false;
+	int finishedTimes[3];
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
@@ -87,6 +90,8 @@ int main(void)
 	al_init_primitives_addon();
 	al_init_font_addon();
 	al_init_ttf_addon();
+	
+	
 
 	ghost ghosts[NUM_ghostS];
 
@@ -108,6 +113,18 @@ int main(void)
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
 	al_start_timer(timer);
+
+	al_flip_display();
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_draw_textf(font, al_map_rgb(0, 255, 255), WIDTH / 3, 100, 0, "Welcome!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 4, 200, 0, "The goal is to get to the end of all 3 levels before time runs out");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 5, 250, 0, "Use the arrow keys to move around. Don't touch the blocks!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 3, 300, 0, "If you do, you will go crazy!");
+	al_draw_textf(time_font, al_map_rgb(0, 255, 100), WIDTH / 3, HEIGHT - 100, 0, "Continue in 10 seconds...");
+	al_flip_display();
+	//cin.get();
+	this_thread::sleep_for(chrono::seconds(10));
+
 	//draw the background tiles
 	MapDrawBG(xOff, yOff, 0, 0, WIDTH - 1, HEIGHT - 1);
 
@@ -118,14 +135,7 @@ int main(void)
 	
 	al_flip_display();
 	
-	al_clear_to_color(al_map_rgb(0, 0, 0));
-	al_draw_textf(font, al_map_rgb(0, 255, 255), WIDTH /3, 100, 0, "Welcome!");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 200, 0, "The goal is to finish all 3 levels before time runs out");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 260, 0, "or you die. Use the arrow keys to move around");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, 300, 0, "Don't touch the blocks! (Some wont hurt you tho)");
-	al_draw_textf(time_font, al_map_rgb(0, 255, 255), WIDTH / 4, HEIGHT - 100, 0, "Press Enter To continue");
-	al_flip_display();
-	cin.get();
+	
 	startTime = al_get_time();
 	
 	while (!done)
@@ -302,6 +312,15 @@ int main(void)
 				hasWon = true;
 				levelOver = true;
 				al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", MAX_SECS - timeLeft);
+				if (name[17] == '1') {
+					finishedTimes[0] = MAX_SECS - timeLeft;
+				}
+				else if (name[17] == '2') {
+					finishedTimes[1] = MAX_SECS - timeLeft;
+				}
+				else if (name[17] == '3') {
+					finishedTimes[2] = MAX_SECS - timeLeft;
+				}
 			}
 			else if (timeLeft <= 0) {
 				timeLeft = 0;
@@ -343,13 +362,15 @@ int main(void)
 	if (isDead) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU DIED!");
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 200, "HEALTH: %s", health.c_str());
 		al_flip_display();
 	}
 	else if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
 		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 150, 0, "YOU WON!");
 		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 200, "HEALTH: %s", health.c_str());
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 250, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 300, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
+		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 3, 15, 350, "FINISHED LEVEL 2 IN %i seconds, finishedTimes[2]");
 		al_flip_display();
 	}
 	al_rest(7.0);
