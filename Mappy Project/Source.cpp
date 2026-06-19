@@ -52,7 +52,7 @@ int main(void)
 	char name[50];
 	//bool gameOver = 0;
 	double startTime = 0.0;
-	int MAX_SECS = 45;
+	int MAX_SECS = 35;
 	int timeLeft = 30;
 	bool isDead = false;
 	int numHits = 0;
@@ -306,7 +306,7 @@ int main(void)
 				ghosts[i].Drawghost();
 			}
 			
-			al_draw_textf(time_font, al_map_rgb(0, 0, 255), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
+			al_draw_textf(time_font, al_map_rgb(0, 255, 50), WIDTH - 250, HEIGHT - 35, 0, "Time Left: %d", timeLeft);
 
 			if (player.CollisionEndBlock()) {
 				hasWon = true;
@@ -366,11 +366,11 @@ int main(void)
 	}
 	else if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_text(font, al_map_rgb(255, 0, 0), WIDTH / 3, 25, 0, "YOU WON!");
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 4, 125, 0, "HEALTH: %s", health.c_str());
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 225, 0, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 325, 0, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
-		al_draw_textf(font, al_map_rgb(255, 0, 0), WIDTH / 7, 425, 0, "FINISHED LEVEL 3 IN %i seconds", finishedTimes[2]);
+		al_draw_text(font, al_map_rgb(0, 255, 0), WIDTH / 3, 25, 0, "YOU WON!");
+		al_draw_textf(font, al_map_rgb(255, 0, 255), WIDTH / 4, 125, 0, "HEALTH: %s", health.c_str());
+		al_draw_textf(font, al_map_rgb(0, 100, 255), 30, 225, 0, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
+		al_draw_textf(font, al_map_rgb(0, 255, 100), 30, 325, 0, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
+		al_draw_textf(font, al_map_rgb(0, 255, 0), 30, 425, 0, "FINISHED LEVEL 3 IN %i seconds", finishedTimes[2]);
 		al_flip_display();
 	}
 	al_rest(7.0);
