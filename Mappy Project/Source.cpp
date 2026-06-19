@@ -74,10 +74,20 @@ int main(void)
 	if (!al_install_audio()) {
 		return -1;
 	}
+
 	if (!al_init_acodec_addon()) {
 		return -1;
 	}
 
+	if (!al_reserve_samples(4)) {
+		return -1;
+	}
+
+	sample = al_load_sample("389552__echocinematics__spy-music.wav");
+
+	if (!sample) {
+		exit(9);
+	}
 
 	display = al_create_display(WIDTH, HEIGHT);			//create our display object
 
@@ -113,6 +123,7 @@ int main(void)
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
 	al_start_timer(timer);
+	al_play_sample(sample, 1.5, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
 
 	al_flip_display();
 	al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -377,6 +388,7 @@ int main(void)
 	MapFreeMem();
 	al_destroy_font(font);
 	al_destroy_event_queue(event_queue);
+	al_destroy_sample(sample);
 	al_destroy_display(display);						//destroy our display object
 
 	return 0;

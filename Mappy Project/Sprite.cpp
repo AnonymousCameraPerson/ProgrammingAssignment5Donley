@@ -1,17 +1,22 @@
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_audio.h>
+#include <allegro5\allegro_acodec.h>
 #include "Sprite.h"
 
 //Lucia Donley
 
 Sprite::Sprite()
 {
+	sample = NULL;
 	image = NULL;
+	
 }
 Sprite::~Sprite()
 {
 	al_destroy_bitmap(image);
+	al_destroy_sample(sample);
 }
 void Sprite::InitSprites(int width, int height)
 {
@@ -37,7 +42,11 @@ void Sprite::InitSprites(int width, int height)
 	animationDirection = 0;
 	speed = 10;
 	hits = 0;
+	sample = al_load_sample("bamboo_stick.flac");
 
+	if (!sample) {
+		exit(9);
+	}
 	image = al_load_bitmap("man_walking.png");
 	al_convert_mask_to_alpha(image, al_map_rgb(254, 254, 254));
 }
@@ -118,6 +127,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	if (animationDirection == 2)
 	{
 		if (collided(x, y + charWidth / 2)) { //collision detection to the left
+			al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 			x = oldx;
 			y = oldy;
 			increaseHits();
@@ -131,6 +141,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	else if (animationDirection == 3)
 	{
 		if (collided(x + charWidth, y + 10) || collided(x + charWidth, y + charHeight - 10) || collided(x + charWidth, y + charHeight / 2)) { //collision detection to the right
+			al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 			x = oldx;
 			y = oldy;
 			currentlyTurning = true;
@@ -145,6 +156,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	if (animationDirection == 1)
 	{
 		if (collided(x, y) || collided(x + charWidth, y)) { //collision detection up
+			al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 			x = oldx;
 			y = oldy;
 			//destAngle += ALLEGRO_PI;
@@ -158,6 +170,7 @@ void Sprite::UpdateSprites(int width, int height, int dir)
 	}
 	if (animationDirection == 0) {
 		if (collided(x, y + charHeight) || collided(x + charWidth, y + charHeight)) {
+			al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 			x = oldx;
 			y = oldy;
 			//destAngle += ALLEGRO_PI;

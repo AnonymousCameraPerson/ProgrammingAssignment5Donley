@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\..\..\Downloads\bamboo_stick.flac">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Downloads\man_walking.png">
@@ -66,5 +69,10 @@
     <Font Include="..\Debug\Coolvetica Hv Comp.otf">
       <Filter>Source Files</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Debug\389552__echocinematics__spy-music.wav">
+      <Filter>Source Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

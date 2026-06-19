@@ -1,5 +1,7 @@
 #ifndef SPRITEH
 #define SPRITEH
+#include <allegro5\allegro_audio.h>
+#include <allegro5\allegro_acodec.h>
 //Lucia Donley
 
 using namespace std;
@@ -54,5 +56,6 @@ private:
 	bool goingLeft;
 	//int jumpFrameDelay;
 	ALLEGRO_BITMAP* image;
+	ALLEGRO_SAMPLE* sample;
 };
 #endif
