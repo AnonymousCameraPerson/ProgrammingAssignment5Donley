@@ -22,7 +22,7 @@ Sprite::~Sprite()
 void Sprite::InitSprites(int width, int height)
 {
 	x = 120;
-	y = 60;
+	y = 90;
 
 	//need to check if dir == something for jumping
 	//maxFrame = 12
@@ -209,7 +209,7 @@ bool Sprite::CollisionEndBlock()
 {
 
 	if (endValue(x + charWidth / 2, y + charHeight + 5)) {
-		sample = NULL;
+		
 		return true;
 	}
 	else

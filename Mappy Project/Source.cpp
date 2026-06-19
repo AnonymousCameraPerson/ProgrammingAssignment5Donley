@@ -19,6 +19,7 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include <array>
 //Lucia Donley
 using namespace std;
 
@@ -59,13 +60,14 @@ int main(void)
 	int numHits = 0;
 	bool wasHit = false;
 	int finishedTimes[3];
-	vector<string> finishedHealths[3] = { "", "", "" };
+	array<string, 3> finishedHealths;
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
 	ALLEGRO_EVENT_QUEUE* event_queue = NULL;
 	ALLEGRO_TIMER* timer;
 	ALLEGRO_FONT* font = NULL;
+	ALLEGRO_FONT* stats_font = NULL;
 	ALLEGRO_FONT* time_font = NULL;
 	ALLEGRO_SAMPLE* sample = NULL;
 
@@ -121,6 +123,7 @@ int main(void)
 
 	font = al_load_ttf_font("college.ttf", 54, 0);
 	time_font = al_load_ttf_font("Coolvetica Hv Comp.otf", 40, 0);
+	stats_font = al_load_ttf_font("Coolvetica Hv Comp.otf", 40, 0);
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 
@@ -327,12 +330,15 @@ int main(void)
 				al_draw_textf(font, al_map_rgb(255, 255, 255), WIDTH / 2 - 200, 150, 0, "Done in %d seconds!", MAX_SECS - timeLeft);
 				if (name[17] == '1') {
 					finishedTimes[0] = MAX_SECS - timeLeft;
+					finishedHealths[0] = health;
 				}
 				else if (name[17] == '2') {
 					finishedTimes[1] = MAX_SECS - timeLeft;
+					finishedHealths[1] = health;
 				}
 				else if (name[17] == '3') {
 					finishedTimes[2] = MAX_SECS - timeLeft;
+					finishedHealths[2] = health;
 				}
 			}
 			else if (timeLeft <= 0) {
@@ -379,16 +385,18 @@ int main(void)
 	}
 	else if (hasWon) {
 		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_text(font, al_map_rgb(0, 255, 0), WIDTH / 3, 25, 0, "YOU WON!");
-		al_draw_textf(font, al_map_rgb(255, 0, 255), WIDTH / 4, 125, 0, "HEALTH: %s", health.c_str());
-		al_draw_textf(font, al_map_rgb(0, 100, 255), 30, 225, 0, "FINISHED LEVEL 1 IN %i seconds", finishedTimes[0]);
-		al_draw_textf(font, al_map_rgb(0, 255, 100), 30, 325, 0, "FINISHED LEVEL 2 IN %i seconds", finishedTimes[1]);
-		al_draw_textf(font, al_map_rgb(0, 255, 0), 30, 425, 0, "FINISHED LEVEL 3 IN %i seconds", finishedTimes[2]);
+		al_draw_text(font, al_map_rgb(0, 255, 0), WIDTH / 3, 50, 0, "YOU WON!");
+		//al_draw_textf(time_font, al_map_rgb(255, 0, 255), WIDTH / 4, 125, 0, "LEVEL 3 HEALTH: %s", health.c_str());
+		al_draw_textf(time_font, al_map_rgb(0, 100, 255), 170, 200, 0, "FINISHED  LEVEL  1  IN  %i  seconds  WITH  Health:  %s", finishedTimes[0], finishedHealths[0].c_str());
+		al_draw_textf(time_font, al_map_rgb(0, 255, 100), 170, 300, 0, "FINISHED  LEVEL  2  IN  %i  seconds  WITH Health:  %s", finishedTimes[1], finishedHealths[1].c_str());
+		al_draw_textf(time_font, al_map_rgb(0, 255, 0), 170, 400, 0, "FINISHED  LEVEL  3  IN  %i  seconds  WITH Health:  %s", finishedTimes[2], finishedHealths[2].c_str());
 		al_flip_display();
 	}
 	al_rest(7.0);
 	MapFreeMem();
 	al_destroy_font(font);
+	al_destroy_font(time_font);
+	al_destroy_font(stats_font);
 	al_destroy_event_queue(event_queue);
 	al_destroy_sample(sample);
 	al_destroy_display(display);						//destroy our display object
