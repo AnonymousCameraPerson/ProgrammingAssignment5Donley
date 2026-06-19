@@ -59,6 +59,7 @@ int main(void)
 	int numHits = 0;
 	bool wasHit = false;
 	int finishedTimes[3];
+	vector<string> finishedHealths[3] = { "", "", "" };
 
 	//allegro variable
 	ALLEGRO_DISPLAY* display = NULL;
